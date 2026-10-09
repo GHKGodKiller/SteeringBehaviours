@@ -5,10 +5,9 @@ public class Agent2_Flee : SteeringAgentBase
 {
     private Camera mainCam;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-        activationKey = Key.Digit2; 
+        activationKey = Key.Digit2; // Tecla 2
         mainCam = Camera.main;
     }
 
@@ -16,6 +15,7 @@ public class Agent2_Flee : SteeringAgentBase
     {
         if (mainCam == null || Mouse.current == null) return Vector2.zero;
 
+        // Lectura de la posición del mouse usando el nuevo Input System
         Vector2 mouseScreenPosition = Mouse.current.position.ReadValue();
         Vector2 mousePosition = mainCam.ScreenToWorldPoint(mouseScreenPosition);
         

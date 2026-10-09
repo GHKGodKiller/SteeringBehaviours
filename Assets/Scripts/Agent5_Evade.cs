@@ -6,10 +6,9 @@ public class Agent5_Evade : SteeringAgentBase
     [Header("Evade Target")]
     public SteeringAgentBase targetAgent; 
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-        activationKey = Key.Digit5; 
+        activationKey = Key.Digit5; // Tecla 5
     }
 
     protected override Vector2 GetBehaviorVelocity(Vector2 currentPos)

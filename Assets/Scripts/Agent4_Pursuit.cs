@@ -6,10 +6,9 @@ public class Agent4_Pursuit : SteeringAgentBase
     [Header("Pursuit Target")]
     public SteeringAgentBase targetAgent; 
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-        activationKey = Key.Digit4; 
+        activationKey = Key.Digit4; // Tecla 4
     }
 
     protected override Vector2 GetBehaviorVelocity(Vector2 currentPos)

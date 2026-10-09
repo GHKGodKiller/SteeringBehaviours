@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.InputSystem; // Requerido para el nuevo Input System
 
-[RequireComponent(typeof(Rigidbody2D))] // Asegura que el objeto tenga un Rigidbody2D[cite: 1]
 public abstract class SteeringAgentBase : MonoBehaviour
 {
     [Header("Configuración Base")]
@@ -14,39 +13,24 @@ public abstract class SteeringAgentBase : MonoBehaviour
     public float obstacleRadius = 1.5f;   
     public Transform[] customObstacles;  
 
-    protected Key activationKey; 
+    protected Key activationKey; // Usando el tipo Key del nuevo Input System
     protected Vector2 velocity;
     private bool isActive = false;
-    protected Rigidbody2D rb;
 
     public Vector2 Velocity => velocity;
 
-    protected virtual void Awake()
-    {
-        rb = GetComponent<Rigidbody2D>();
-        rb.gravityScale = 0f; // Evita que caigan al vacío en una vista Top-Down
-        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous; // Mejora la detección de choques
-        rb.freezeRotation = true; // Congelamos la rotación física para controlarla nosotros
-    }
-
     protected virtual void Update()
     {
+        // Validación y lectura directa del teclado con el Nuevo Input System
         if (Keyboard.current != null && Keyboard.current[activationKey].wasPressedThisFrame)
         {
             isActive = !isActive;
-            if (!isActive) 
-            {
-                velocity = Vector2.zero;
-                rb.linearVelocity = Vector2.zero; // Detiene el objeto físicamente[cite: 1]
-            }
+            if (!isActive) velocity = Vector2.zero; // Detiene el comportamiento
         }
-    }
 
-    protected virtual void FixedUpdate()
-    {
         if (!isActive) return;
 
-        Vector2 position = rb.position; 
+        Vector2 position = transform.position; 
         Vector2 desiredVelocity = GetBehaviorVelocity(position); 
 
         Vector2 steering = desiredVelocity - velocity; 
@@ -57,10 +41,8 @@ public abstract class SteeringAgentBase : MonoBehaviour
         steering = Vector2.ClampMagnitude(steering, maxForce); 
         Vector2 acceleration = steering / mass;                
 
-        velocity = Vector2.ClampMagnitude(velocity + (acceleration * Time.fixedDeltaTime), maxVelocity); 
-        
-        // Aplica la velocidad al Rigidbody2D para que Unity calcule las colisiones[cite: 1]
-        rb.linearVelocity = velocity; 
+        velocity = Vector2.ClampMagnitude(velocity + (acceleration * Time.deltaTime), maxVelocity); 
+        transform.position += (Vector3)(velocity * Time.deltaTime);                                  
 
         RotateTowardsVelocity();
     }
@@ -122,7 +104,7 @@ public abstract class SteeringAgentBase : MonoBehaviour
         if (velocity.sqrMagnitude > 0.001f)
         {
             float angle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg; 
-            rb.rotation = angle - 90f; // Rota el Rigidbody en lugar del Transform
+            transform.rotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
         }
     }
 }

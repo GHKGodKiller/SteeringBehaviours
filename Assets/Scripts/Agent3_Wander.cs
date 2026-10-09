@@ -10,15 +10,14 @@ public class Agent3_Wander : SteeringAgentBase
     
     private float wanderAngle;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-        activationKey = Key.Digit3; 
+        activationKey = Key.Digit3; // Tecla 3
     }
 
     protected override Vector2 GetBehaviorVelocity(Vector2 currentPos)
     {
-        wanderAngle += Random.Range(-1f, 1f) * wanderJitter * Time.fixedDeltaTime; 
+        wanderAngle += Random.Range(-1f, 1f) * wanderJitter * Time.deltaTime; 
 
         Vector2 forward = velocity.sqrMagnitude > 0.001f ? velocity.normalized : (Vector2)transform.up;
         Vector2 circleCenter = currentPos + forward * wanderDistance; 

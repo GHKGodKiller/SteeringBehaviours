@@ -8,10 +8,9 @@ public class Agent1_SeekArrival : SteeringAgentBase
     public float slowingRadius = 4f;      
     public float stoppingDistance = 1.2f; 
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake(); // Inicializa el Rigidbody
-        activationKey = Key.Digit1;
+        activationKey = Key.Digit1; // Tecla 1 del nuevo sistema
     }
 
     protected override Vector2 GetBehaviorVelocity(Vector2 currentPos)
@@ -22,7 +21,10 @@ public class Agent1_SeekArrival : SteeringAgentBase
         Vector2 toTarget = targetPos - currentPos; 
         float distance = toTarget.magnitude; 
 
-        if (distance <= stoppingDistance) return Vector2.zero; 
+        if (distance <= stoppingDistance)
+        {
+            return Vector2.zero; 
+        }
         else if (distance < slowingRadius)
         {
             float factor = (distance - stoppingDistance) / (slowingRadius - stoppingDistance); 
